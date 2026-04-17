@@ -1,4 +1,4 @@
-// src/services/menu/index.ts
+// src/services/menu/api.ts
 
 import { request } from "@/lib/api-client";
 import { CategoryDto, CreateCategoryPayload, CreateProductPayload, ProductDto, ProductPageParam, ProductSimpleDto, UpdateCategoryPayload, UpdateProductPayload } from "./types";
