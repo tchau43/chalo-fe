@@ -45,13 +45,14 @@ export const useAuthStore = create<AuthState>()(
         const opts = `path=${COOKIE_OPTIONS.path}; SameSite=${COOKIE_OPTIONS.sameSite}`
         document.cookie = `${TOKEN_KEYS.ACCESS}=${accessToken}; ${opts}`
         document.cookie = `${TOKEN_KEYS.REFRESH}=${refreshToken}; ${opts}`
+        set({ accessToken, refreshToken })
       },
       setUser: (user) => {
         set({ user: user })
         const token = get().accessToken
         if (typeof window !== 'undefined' && token) {
           const opts = `path=${COOKIE_OPTIONS.path}; SameSite=${COOKIE_OPTIONS.sameSite}`
-          document.cookie = `${TOKEN_KEYS.ROLE}=${user.role}, ${opts}`
+          document.cookie = `${TOKEN_KEYS.ROLE}=${user.role}; ${opts}`
         }
       },
       setHydrated: () => {
@@ -86,7 +87,7 @@ export const useAuthStore = create<AuthState>()(
       storage: createJSONStorage(() => localStorage),
 
       partialize: (state) => ({
-        accessToken123123: state.accessToken,
+        accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         user: state.user
       }),
