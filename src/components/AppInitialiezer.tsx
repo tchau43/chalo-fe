@@ -1,10 +1,10 @@
 "use client";
 
 import { ROUTES } from "@/constants";
-import { getCurrentUser } from "@/services/auth/api";
+import { getCurrentUser } from "@/services/auth/auth.api";
 import { useAuthStore } from "@/stores/auth.store";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 const InitializingScreen = () => {
   return (
@@ -24,8 +24,12 @@ const InitializingScreen = () => {
   );
 };
 
+const PUBLIC_ROUTES = [ROUTES.MENU, ROUTES.LOGIN];
+
 export function AppInitializer({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  const isFetching = useRef(false);
 
   const {
     isHydrated,
@@ -36,22 +40,24 @@ export function AppInitializer({ children }: { children: React.ReactNode }) {
     setInitialized,
   } = useAuthStore();
 
-  const isCustomerRoute = pathname.startsWith(ROUTES.MENU);
+  const isPublicRoute =
+    PUBLIC_ROUTES.some((r) => pathname.startsWith(r)) || pathname === "/";
 
   const initialize = useCallback(async () => {
-    if (!isHydrated || isInitialized) return;
+    if (!isHydrated || isInitialized || isFetching.current) return;
 
     try {
       if (!accessToken) {
-        setInitialized();
         return;
       }
+      isFetching.current = true;
       const user = await getCurrentUser();
       setUser(user);
-      setInitialized();
     } catch (error) {
       logout();
+    } finally {
       setInitialized();
+      isFetching.current = false;
     }
   }, [isInitialized, isHydrated, accessToken, setInitialized, setUser, logout]);
 
@@ -59,7 +65,7 @@ export function AppInitializer({ children }: { children: React.ReactNode }) {
     initialize();
   }, [initialize]);
 
-  if (isCustomerRoute) return <>{children}</>;
+  if (isPublicRoute) return <>{children}</>;
 
   if (!isHydrated || !isInitialized) return <InitializingScreen />;
 
