@@ -10,14 +10,14 @@ export interface LoginPayload {
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
-  role: UserRole
+  user: AuthUser
 }
 
-export const loginApi = (data: LoginPayload): Promise<LoginResponse> => {
+export const userLogin = (data: LoginPayload): Promise<LoginResponse> => {
   return request.post(API.AUTH.LOGIN, data, { skipAuth: true } as never)
 }
 
-export const logoutApi = (): Promise<void> => {
+export const userLogout = (): Promise<void> => {
   return request.post(API.AUTH.LOGOUT)
 }
 

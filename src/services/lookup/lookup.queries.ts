@@ -2,7 +2,7 @@
 // src/services/lookup/queries.ts
 
 import { QUERY_KEYS } from "@/constants"
-import { getCategorySimpleList, getTableAreas } from "./api"
+import { getCategorySimpleList, getTableAreas } from "./lookup.api"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 export const useGetCategorySimpleList = () => {

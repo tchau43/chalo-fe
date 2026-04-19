@@ -1,6 +1,6 @@
 import { API } from "@/constants"
 import { request } from "@/lib/api-client"
-import { SimpleOptions } from "./types"
+import { SimpleOptions } from "./lookup.types"
 
 export const getCategorySimpleList = (): Promise<SimpleOptions[]> => {
   return request.get(API.CATEGORY.SIMPLE_LIST)

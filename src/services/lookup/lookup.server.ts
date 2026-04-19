@@ -1,7 +1,7 @@
 // src/services/lookup/server.ts
 
 import { API, CACHE_TAGS } from "@/constants"
-import { SimpleOptions } from "./types"
+import { SimpleOptions } from "./lookup.types"
 
 export const getCachedCategorySimpleList = async (): Promise<SimpleOptions[]> => {
   const res = await fetch(
