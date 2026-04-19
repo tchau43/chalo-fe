@@ -1,3 +1,5 @@
+// src/constants/auth.ts
+
 export const TOKEN_KEYS = {
   ACCESS: 'ACCESS_TOKEN',
   REFRESH: 'REFRESH_TOKEN',

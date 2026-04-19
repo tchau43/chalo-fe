@@ -1,3 +1,4 @@
+// src/constants/routes.ts
 export const ROUTES = {
   //public
   LOGIN: '/login',
@@ -5,6 +6,8 @@ export const ROUTES = {
 
   //public (customer)
   MENU: '/menu',
+
+  DASHBOARD: '/dashboard',
   
   //staff - authen
   STAFF: {
@@ -31,4 +34,5 @@ export const PUBLIC_ROUTES = [ROUTES.LOGIN, ROUTES.REGISTER] as const
 export const ROLE_DEFAULT_ROUTES: Record<string, string> = {
   ADMIN: ROUTES.ADMIN.DASHBOARD,
   MODERATOR: ROUTES.STAFF.ORDERS,
+  CUSTOMER: ROUTES.MENU
 }

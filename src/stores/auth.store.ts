@@ -1,4 +1,5 @@
 import { COOKIE_OPTIONS, TOKEN_KEYS, type UserRole } from "@/constants";
+import { clearAuthCookies, persistAuthCookies } from "@/services/auth/auth.helper";
 import { use } from "react";
 import { create } from "zustand"
 import { createJSONStorage, persist } from 'zustand/middleware'
@@ -42,17 +43,16 @@ export const useAuthStore = create<AuthState>()(
       isInitialized: false,
 
       setTokens: (accessToken: string, refreshToken: string) => {
-        const opts = `path=${COOKIE_OPTIONS.path}; SameSite=${COOKIE_OPTIONS.sameSite}`
-        document.cookie = `${TOKEN_KEYS.ACCESS}=${accessToken}; ${opts}`
-        document.cookie = `${TOKEN_KEYS.REFRESH}=${refreshToken}; ${opts}`
         set({ accessToken, refreshToken })
+        if(typeof document !== 'undefined' && get().user){
+          persistAuthCookies(accessToken, get().user!.role)
+        }
       },
       setUser: (user) => {
         set({ user: user })
         const token = get().accessToken
-        if (typeof window !== 'undefined' && token) {
-          const opts = `path=${COOKIE_OPTIONS.path}; SameSite=${COOKIE_OPTIONS.sameSite}`
-          document.cookie = `${TOKEN_KEYS.ROLE}=${user.role}; ${opts}`
+        if (typeof document !== 'undefined' && token) {
+          persistAuthCookies(token, user.role)
         }
       },
       setHydrated: () => {
@@ -63,11 +63,8 @@ export const useAuthStore = create<AuthState>()(
       },
       logout: () => {
         set({ accessToken: null, refreshToken: null, user: null, isInitialized: false })
-        if (typeof window !== 'undefined') {
-          const opts = `path=${COOKIE_OPTIONS.path}; expired='Thu, 01 Jan 1970 00:00:00 GMT`
-          document.cookie = `${TOKEN_KEYS.ACCESS}=; ${opts}`
-          document.cookie = `${TOKEN_KEYS.REFRESH}=; ${opts}`
-          document.cookie = `${TOKEN_KEYS.ROLE}=; ${opts}`
+        if (typeof document !== 'undefined') {
+          clearAuthCookies()
         }
       },
 
