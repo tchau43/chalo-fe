@@ -86,7 +86,7 @@ apiClient.interceptors.response.use(
   (response) => {
     const { code, message, data } = response.data
 
-    if (code === 200) return { ...response, data }
+    if (code === 200) return data
 
     const err = new axios.AxiosError(
       message,
@@ -144,22 +144,22 @@ apiClient.interceptors.response.use(
 
 export const request = {
   get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return apiClient.get<T, T>(url, config)
+    return apiClient.get<ApiResponse<T>, T>(url, config)
   },
   post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return apiClient.post<T, T>(url, data, config)
+    return apiClient.post<ApiResponse<T>, T>(url, data, config)
   },
   put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-    return apiClient.put<T, T>(url, data, config)
+    return apiClient.put<ApiResponse<T>, T>(url, data, config)
   },
   delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    return apiClient.delete<T, T>(url, config)
+    return apiClient.delete<ApiResponse<T>, T>(url, config)
   },
   download(url: string, config?: AxiosRequestConfig): Promise<Blob> {
     return apiClient.get<Blob, Blob>(url, { ...config, responseType: 'blob' })
   },
   upload<T>(url: string, formData?: FormData, config?: AxiosRequestConfig): Promise<T> {
-    return apiClient.post<T, T>(url, formData, {
+    return apiClient.post<ApiResponse<T>, T>(url, formData, {
       ...config,
       headers: { 'Content-Type': 'multipart/form-data' }
     })

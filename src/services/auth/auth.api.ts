@@ -14,7 +14,7 @@ export interface LoginResponse {
 }
 
 export const userLogin = (data: LoginPayload): Promise<LoginResponse> => {
-  return request.post<LoginResponse>(API.AUTH.LOGIN, data, { skipAuth: true } as never)
+  return request.post(API.AUTH.LOGIN, data, { skipAuth: true } as never)
 }
 
 export const userLogout = (): Promise<void> => {
