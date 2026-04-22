@@ -11,7 +11,7 @@ export const API = {
   CATEGORY: {
     LIST: '',
     DETAIL: '',
-    CREAT: '',
+    CREATE: '',
     UPDATE: '',
     DELETE: '',
     SIMPLE_LIST: ''

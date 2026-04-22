@@ -1,6 +1,5 @@
-import { COOKIE_OPTIONS, TOKEN_KEYS, type UserRole } from "@/constants";
+import { type UserRole } from "@/constants";
 import { clearAuthCookies, persistAuthCookies } from "@/services/auth/auth.helper";
-import { use } from "react";
 import { create } from "zustand"
 import { createJSONStorage, persist } from 'zustand/middleware'
 

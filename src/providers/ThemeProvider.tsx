@@ -1,3 +1,5 @@
+'use client'
+// src/providers/ThemeProvider.tsx
 import {
   createContext,
   ReactNode,

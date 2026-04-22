@@ -13,7 +13,7 @@ export const getCategoryById = (id: string): Promise<CategoryDto> => {
   return request.get(API.CATEGORY.DETAIL, { params: { id } })
 }
 export const createCategory = (data: CreateCategoryPayload) => {
-  return request.post(API.CATEGORY.CREAT, data)
+  return request.post(API.CATEGORY.CREATE, data)
 }
 export const updateCategory = (data: UpdateCategoryPayload) => {
   return request.put(API.CATEGORY.UPDATE, data)

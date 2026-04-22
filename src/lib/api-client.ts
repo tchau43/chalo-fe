@@ -15,6 +15,8 @@ export interface TokenPair {
 
 const isClient = typeof window !== 'undefined'
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080/api'
+
 export const tokenStore = {
   getAccessToken: (): string | null => {
     return isClient ? localStorage.getItem(TOKEN_KEYS.ACCESS) : null
@@ -64,7 +66,7 @@ declare module 'axios' {
 }
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080/api',
+  baseURL: API_BASE,
   timeout: 30_000,
   headers: { 'Content-Type': 'application/json' }
 })
@@ -78,7 +80,7 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     config.headers['Cache-Control'] = 'no-cache'
   }
   return config
-}, (error) => { Promise.reject(error) })
+}, (error) => Promise.reject(error))
 
 apiClient.interceptors.response.use(
   (response) => {
@@ -101,7 +103,7 @@ apiClient.interceptors.response.use(
     if (status === 401 && !original._retry) {
       original._retry = true
 
-      if (!isRefreshing) {
+      if (isRefreshing) {
         return new Promise((resolve, reject) => {
           reqQueue.push({
             resolve: (newToken) => {
@@ -118,7 +120,7 @@ apiClient.interceptors.response.use(
         if (!refreshToken)
           throw new Error('No refresh token')
         const { data: responseData } = await axios.post<ApiResponse<TokenPair>>(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080/api'}/auth/refresh-token`,
+          `${API_BASE}/auth/refresh-token`,
           { refreshToken },
           { skipAuth: true } as AxiosRequestConfig
         )

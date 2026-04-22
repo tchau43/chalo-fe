@@ -5,7 +5,7 @@ import { SimpleOptions } from "./lookup.types"
 
 export const getCachedCategorySimpleList = async (): Promise<SimpleOptions[]> => {
   const res = await fetch(
-    `${process.env.API_BASE_URL}${API.CATEGORY.SIMPLE_LIST}`,
+    `${process.env.INTERNAL_API_BASE_URL}${API.CATEGORY.SIMPLE_LIST}`,
     {
       next: {
         tags: [CACHE_TAGS.MENU.CATEGORIES],
@@ -20,7 +20,7 @@ export const getCachedCategorySimpleList = async (): Promise<SimpleOptions[]> =>
 
 export const getCachedTableAreaList = async (): Promise<string[]> => {
   const res = await fetch(
-    `${process.env.API_BASE_URL}${API.TABLE.AREAS}`,
+    `${process.env.INTERNAL_API_BASE_URL}${API.TABLE.AREAS}`,
     {
       next: {
         tags: [CACHE_TAGS.TABLE.AREAS],

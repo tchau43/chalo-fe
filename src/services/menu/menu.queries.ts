@@ -2,9 +2,8 @@
 import { QUERY_KEYS } from '@/constants'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { createCategory, createProduct, deleteCategory, deleteProduct, getCategoryById, getCategoryList, getProduct, getProductPage, getProductSimpleList, updateCategory, updateProduct, updateProductStatus } from '.'
-import { CreateCategoryPayload, CreateProductPayload, ProductDto, ProductPageParam, UpdateCategoryPayload, UpdateProductPayload } from './menu.types'
+import { CreateCategoryPayload, CreateProductPayload,  ProductPageParam, UpdateCategoryPayload, UpdateProductPayload } from './menu.types'
 import { toast } from 'sonner'
-import { strict } from 'assert'
 
 
 // =========Category==================
