@@ -1,9 +1,10 @@
 // src/mocks/handlers/auth.handlers.ts
+import { USER_ROLE } from '@/constants';
 import { http, HttpResponse, delay } from 'msw'
 
 export const authHandlers = [
   // POST /api/auth/login
-  http.post('/api/auth/login', async ({ request }) => {
+  http.post('*/api/auth/login', async ({ request }) => {
     await delay(500) // giả lập network latency
     const body = await request.json() as { username: string; password: string }
 
@@ -12,12 +13,12 @@ export const authHandlers = [
       'admin': {
         accessToken: 'mock-access-token-admin',
         refreshToken: 'mock-refresh-token-admin',
-        user: { id: 1, username: 'admin', fullName: 'Nguyễn Văn Admin', avatar: null, role: 'ADMIN', permissions: ['menu:write', 'table:write', 'order:write', 'staff:write'] },
+        user: { id: 1, username: 'admin', fullName: 'Nguyễn Văn Admin', avatar: null, role: USER_ROLE.ADMIN, permissions: ['menu:write', 'table:write', 'order:write', 'staff:write'] },
       },
       'staff': {
         accessToken: 'mock-access-token-staff',
         refreshToken: 'mock-refresh-token-staff',
-        user: { id: 2, username: 'staff', fullName: 'Trần Thị Nhân Viên', avatar: null, role: 'MODERATOR', permissions: ['order:write', 'order:read'] },
+        user: { id: 2, username: 'staff', fullName: 'Trần Thị Nhân Viên', avatar: null, role: USER_ROLE.MODERATOR, permissions: ['order:write', 'order:read'] },
       },
     }
 
@@ -30,7 +31,7 @@ export const authHandlers = [
   }),
 
   // GET /api/auth/me
-  http.get('/api/auth/me', ({ request }) => {
+  http.get('*/api/auth/me', ({ request }) => {
     const auth = request.headers.get('Authorization')
     if (!auth) return HttpResponse.json({ code: 401, message: 'Unauthorized', data: null }, { status: 401 })
 
@@ -44,7 +45,7 @@ export const authHandlers = [
   }),
 
   // POST /api/auth/refresh-token
-  http.post('/api/auth/refresh-token', async ({ request }) => {
+  http.post('*/api/auth/refresh-token', async ({ request }) => {
     await delay(300)
     const body = await request.json() as { refreshToken: string }
     if (!body.refreshToken.startsWith('mock-refresh-token')) {
@@ -57,7 +58,7 @@ export const authHandlers = [
     })
   }),
 
-  http.post('/api/auth/logout', () =>
+  http.post('*/api/auth/logout', () =>
     HttpResponse.json({ code: 200, message: 'success', data: null })
   ),
 ]
