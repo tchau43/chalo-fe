@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "dump:src": "node scripts/dump-src.mjs",
+    "dump:project": "node scripts/dump-project-code.mjs",
+    "dump:tree": "node scripts/dump-tree.mjs",
+    "dump:git": "node scripts/dump-git-changes.mjs",
+    "dump:git:staged": "node scripts/dump-git-changes.mjs --staged"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
