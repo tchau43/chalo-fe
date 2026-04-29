@@ -1,6 +1,7 @@
 import { TOKEN_KEYS } from "@/constants"
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios"
 import { handleApiError, triggerSessionExpired } from "./error-handler"
+import { useAuthStore } from "@/stores/auth.store"
 
 export interface ApiResponse<T = unknown> {
   code: number,
@@ -18,19 +19,6 @@ const isClient = typeof window !== 'undefined'
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8080/api'
 
 export const tokenStore = {
-  getAccessToken: (): string | null => {
-    return isClient ? localStorage.getItem(TOKEN_KEYS.ACCESS) : null
-  },
-  getRefreshToken: (): string | null => {
-    return isClient ? localStorage.getItem(TOKEN_KEYS.REFRESH) : null
-  },
-  setTokens: (token: TokenPair): void => {
-    localStorage.setItem(TOKEN_KEYS.ACCESS, token.accessToken)
-    localStorage.setItem(TOKEN_KEYS.REFRESH, token.refreshToken)
-    const opts = 'path=/; SameSite=Strict'
-    document.cookie = `${TOKEN_KEYS.ACCESS}=${token.accessToken}; ${opts}`
-    document.cookie = `${TOKEN_KEYS.REFRESH}=${token.refreshToken}; ${opts}`
-  },
   clearTokens: (): void => {
     localStorage.removeItem(TOKEN_KEYS.ACCESS)
     localStorage.removeItem(TOKEN_KEYS.REFRESH)
@@ -72,7 +60,7 @@ const apiClient: AxiosInstance = axios.create({
 })
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const accToken = tokenStore.getAccessToken()
+  const accToken = useAuthStore.getState().accessToken
   if (accToken && !config.skipAuth) {
     config.headers.Authorization = `Bearer ${accToken}`
   }
@@ -116,7 +104,7 @@ apiClient.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const refreshToken = tokenStore.getRefreshToken()
+        const refreshToken = useAuthStore.getState().refreshToken
         if (!refreshToken)
           throw new Error('No refresh token')
         const { data: responseData } = await axios.post<ApiResponse<TokenPair>>(
@@ -125,7 +113,7 @@ apiClient.interceptors.response.use(
           { skipAuth: true } as AxiosRequestConfig
         )
         const newTokens = responseData.data
-        tokenStore.setTokens(newTokens)
+        useAuthStore.getState().setTokens(newTokens.accessToken, newTokens.refreshToken)
         drainQueue(newTokens.accessToken)
         original.headers.Authorization = `Bearer ${newTokens.accessToken}`
         return apiClient(original)

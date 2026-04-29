@@ -1,21 +1,13 @@
 "use client";
 import { LogoutIcon } from "@/components/shared/icons/LogoutIcon";
-import { ROUTES } from "@/constants";
-import { userLogout } from "@/services/auth/auth.api";
+import { useLogout } from "@/hooks/useLogout";
 import { useAuthStore } from "@/stores/auth.store";
-import { useRouter } from "next/navigation";
 
 export const SidebarProfile = () => {
-  const { user, logout } = useAuthStore();
-  const router = useRouter();
+  const { user } = useAuthStore();
 
-  const handleLogout = async () => {
-    try {
-      await userLogout();
-    } catch {}
-    logout();
-    router.push(ROUTES.LOGIN);
-  };
+  const handleLogout = useLogout();
+  
   return (
     <div className="border-t border-gray-100 dark:border-gray-700 p-3">
       <div className="flex items-center gap-3 rounded-xl px-3 pt-2.5 mb-1">

@@ -1,65 +1,84 @@
+"use client";
 // src/services/menu/queries.ts
-import { QUERY_KEYS } from '@/constants'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createCategory, createProduct, deleteCategory, deleteProduct, getCategoryById, getCategoryList, getProduct, getProductPage, getProductSimpleList, updateCategory, updateProduct, updateProductStatus } from '.'
-import { CreateCategoryPayload, CreateProductPayload,  ProductPageParam, UpdateCategoryPayload, UpdateProductPayload } from './menu.types'
-import { toast } from 'sonner'
-
+import { QUERY_KEYS } from "@/constants";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createCategory,
+  createProduct,
+  deleteCategory,
+  deleteProduct,
+  getCategoryById,
+  getCategoryList,
+  getProduct,
+  getProductPage,
+  getProductSimpleList,
+  updateCategory,
+  updateProduct,
+  updateProductStatus,
+} from "./menu.api";
+import {
+  CreateCategoryPayload,
+  CreateProductPayload,
+  ProductPageParam,
+  UpdateCategoryPayload,
+  UpdateProductPayload,
+} from "./menu.types";
+import { toast } from "sonner";
 
 // =========Category==================
 export const useGetCategoryList = () => {
   return useQuery({
     queryKey: QUERY_KEYS.MENU.CATEGORIES,
     queryFn: getCategoryList,
-    staleTime: 5 * 60_000
-  })
-}
+    staleTime: 5 * 60_000,
+  });
+};
 
 export const useGetCategoryById = (id: string | null) => {
   return useQuery({
     queryKey: QUERY_KEYS.MENU.CATEGORY(id!),
     queryFn: () => getCategoryById(id!),
     enabled: !!id,
-    staleTime: 5 * 60_000
-  })
-}
+    staleTime: 5 * 60_000,
+  });
+};
 
 export const useCreateCategory = () => {
-  const qc = useQueryClient()
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateCategoryPayload) => createCategory(data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORIES })
-      toast.success('Thêm danh mục hàng thành công')
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORIES });
+      toast.success("Thêm danh mục hàng thành công");
     },
-    onError: (error: Error) => toast.error(error.message)
-  })
-}
+    onError: (error: Error) => toast.error(error.message),
+  });
+};
 
 export const useUpdateCategory = () => {
-  const qc = useQueryClient()
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: UpdateCategoryPayload) => updateCategory(data),
     onSuccess: (_, data) => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORIES })
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORY(data.id) })
-      toast.success('Cập nhật danh mục hàng thành công')
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORIES });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORY(data.id) });
+      toast.success("Cập nhật danh mục hàng thành công");
     },
-    onError: (error: Error) => toast.error(error.message)
-  })
-}
+    onError: (error: Error) => toast.error(error.message),
+  });
+};
 
 export const useDeleteCategory = () => {
-  const qc = useQueryClient()
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteCategory(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORIES })
-      toast.success('Xoá danh mục hàng thành công')
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.CATEGORIES });
+      toast.success("Xoá danh mục hàng thành công");
     },
-    onError: (error: Error) => toast.error(error.message)
-  })
-}
+    onError: (error: Error) => toast.error(error.message),
+  });
+};
 
 // =========Product==================
 export const useGetProductPage = (params: ProductPageParam) => {
@@ -67,9 +86,9 @@ export const useGetProductPage = (params: ProductPageParam) => {
     queryKey: QUERY_KEYS.MENU.PRODUCT_PAGE(params),
     queryFn: () => getProductPage(params),
     staleTime: 30_000,
-    placeholderData: (prev) => prev
-  })
-}
+    placeholderData: (prev) => prev,
+  });
+};
 
 export const useGetProductByid = (id: string | null) => {
   return useQuery({
@@ -77,62 +96,68 @@ export const useGetProductByid = (id: string | null) => {
     queryFn: () => getProduct(id!),
     enabled: !!id,
     staleTime: 60_000,
-  })
-}
+  });
+};
 
 export const useGetProductSimpleList = (categoryId?: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.MENU.SIMPLE_LIST(categoryId!),
     queryFn: () => getProductSimpleList(categoryId!),
     staleTime: 5 * 60_000,
-  })
-}
+  });
+};
 
 export const useCreateProduct = () => {
-  const qc = useQueryClient()
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: CreateProductPayload) => createProduct(data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS })
-      toast.success("Thêm sản phẩm mới thành công")
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS });
+      toast.success("Thêm sản phẩm mới thành công");
     },
-    onError: (e: Error) => toast.error(e.message)
-  })
-}
+    onError: (e: Error) => toast.error(e.message),
+  });
+};
 
 export const useUpdateProduct = () => {
-  const qc = useQueryClient()
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: UpdateProductPayload) => updateProduct(data),
     onSuccess: (_, data) => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS })
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCT(data.id) })
-      toast.success("Sửa sản phẩm thành công")
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCT(data.id) });
+      toast.success("Sửa sản phẩm thành công");
     },
-    onError: (e: Error) => toast.error(e.message)
-  })
-}
+    onError: (e: Error) => toast.error(e.message),
+  });
+};
 
 export const useUpdateProductStatus = () => {
-  const qc = useQueryClient()
+  const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, status }: { id: string, status: Parameters<typeof updateProductStatus>[1] }) => updateProductStatus(id, status),
+    mutationFn: ({
+      id,
+      status,
+    }: {
+      id: string;
+      status: Parameters<typeof updateProductStatus>[1];
+    }) => updateProductStatus(id, status),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS })
-      toast.success("Sửa sản phẩm thành công")
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS });
+      toast.success("Sửa sản phẩm thành công");
     },
-    onError: (e: Error) => toast.error(e.message)
-  })
-}
+    onError: (e: Error) => toast.error(e.message),
+  });
+};
 
 export const useDeleteProduct = () => {
-  const qc = useQueryClient()
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteProduct(id),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS })
-      toast.success("Sửa sản phẩm thành công")
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.MENU.PRODUCTS });
+      toast.success("Xoá sản phẩm thành công");
     },
-    onError: (e: Error) => toast.error(e.message)
-  })
-}
+    onError: (e: Error) => toast.error(e.message),
+  });
+};

@@ -1,6 +1,7 @@
 "use client";
+// src/components/AppInitialiezer.tsx
 
-import { ROUTES } from "@/constants";
+import { PUBLIC_ROUTES } from "@/constants";
 import { getCurrentUser } from "@/services/auth/auth.api";
 import { useAuthStore } from "@/stores/auth.store";
 import { usePathname } from "next/navigation";
@@ -23,8 +24,6 @@ const InitializingScreen = () => {
     </div>
   );
 };
-
-const PUBLIC_ROUTES = [ROUTES.MENU, ROUTES.LOGIN];
 
 export function AppInitializer({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

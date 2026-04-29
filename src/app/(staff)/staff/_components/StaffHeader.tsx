@@ -5,22 +5,14 @@ import Link from "next/link";
 import { STAFF_HEADER_ITEMS } from "./header.config";
 import { useAuthStore } from "@/stores/auth.store";
 import { usePathname, useRouter } from "next/navigation";
-import { userLogout } from "@/services/auth/auth.api";
-import { ROUTES } from "@/constants";
 import { LogoutIcon } from "@/components/shared/icons/LogoutIcon";
+import { useLogout } from "@/hooks/useLogout";
 
 export const StaffHeader = () => {
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
   const pathname = usePathname();
-  const router = useRouter();
 
-  const handleLogout = async () => {
-    try {
-      await userLogout();
-    } catch {}
-    logout();
-    router.push(ROUTES.LOGIN);
-  };
+  const handleLogout = useLogout()
 
   return (
     <header className="flex items-center gap-4 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-3">
