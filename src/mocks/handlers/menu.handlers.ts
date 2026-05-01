@@ -490,6 +490,13 @@ export const menuHandlers = [
   }),
 
   // ===== PRODUCT =====
+  http.get("*/api/menu/product/list", async () => {
+    await delay(300);
+    // Chỉ trả món đang active — đúng với góc nhìn customer
+    const visible = products.filter((p) => p.isActive);
+    return ok(visible);
+  }),
+
   http.get("*/api/menu/product/page", async ({ request }) => {
     await delay(400);
     const url = new URL(request.url);

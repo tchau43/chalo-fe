@@ -1,7 +1,7 @@
 "use client";
 // src/services/menu/queries.ts
 import { QUERY_KEYS } from "@/constants";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createCategory,
   createProduct,
@@ -86,7 +86,7 @@ export const useGetProductPage = (params: ProductPageParam) => {
     queryKey: QUERY_KEYS.MENU.PRODUCT_PAGE(params),
     queryFn: () => getProductPage(params),
     staleTime: 30_000,
-    placeholderData: (prev) => prev,
+    placeholderData: keepPreviousData,
   });
 };
 

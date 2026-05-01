@@ -15,6 +15,7 @@ export default function QueryProvider({
           queries: {
             refetchOnWindowFocus: false, // Tùy chọn: Tắt tự động gọi lại API khi chuyển tab
             retry: 1,
+            staleTime: 60_000,
           },
         },
       }),

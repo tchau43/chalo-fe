@@ -1,5 +1,5 @@
 "use client";
-// src/components/AppInitialiezer.tsx
+// src/components/AppInitializer.tsx
 
 import { PUBLIC_ROUTES } from "@/constants";
 import { getCurrentUser } from "@/services/auth/auth.api";

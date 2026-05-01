@@ -53,7 +53,7 @@ export default function ProductsPage() {
   });
 
   const createProdMutation = useCreateProduct();
-  const updatePredMutation = useUpdateProduct();
+  const updateProdMutation = useUpdateProduct();
   const deleteProdMutation = useDeleteProduct();
   const updateProdStatusMutation = useUpdateProductStatus();
 
@@ -68,7 +68,7 @@ export default function ProductsPage() {
   const handleUpdateProd = async (data: ProductFormType) => {
     if (!editTarget) return;
     try {
-      await updatePredMutation.mutateAsync({ ...data, id: editTarget.id });
+      await updateProdMutation.mutateAsync({ ...data, id: editTarget.id });
       setEditTarget(null);
       table.refresh();
     } catch {}
@@ -151,7 +151,7 @@ export default function ProductsPage() {
           }
           disabled={
             updateProdStatusMutation.isPending &&
-            row.id === updatePredMutation.variables?.id
+            row.id === updateProdMutation.variables?.id
           }
         />
       ),
@@ -279,7 +279,7 @@ export default function ProductsPage() {
             defaultValue={editTarget}
             onSubmit={handleUpdateProd}
             onCancel={() => setEditTarget(null)}
-            isLoading={updatePredMutation.isPending}
+            isLoading={updateProdMutation.isPending}
           />
         )}
       </Modal>

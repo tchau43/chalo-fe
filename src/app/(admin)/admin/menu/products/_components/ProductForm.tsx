@@ -8,6 +8,7 @@ import { Toggle } from "@/components/shared/ui/Toggle";
 import { ProductFormType, ProductSchema } from "@/schemas/menu.schema";
 import { useGetCategorySimpleList } from "@/services/lookup/lookup.queries";
 import { ProductDto } from "@/services/menu/menu.types";
+import { uploadImage } from "@/services/upload/upload.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -72,17 +73,8 @@ export const ProductForm = ({
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload/image", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) throw new Error("Upload thất bại");
-
-      const json = await res.json();
-      setValue("imageUrl", json.data.url);
+      const res = await uploadImage(file);
+      setValue("imageUrl", res.url);
     } catch (error) {
       console.error("Lỗi upload:", error);
       toast.error("Không thể tải ảnh lên. Vui lòng thử lại!");
