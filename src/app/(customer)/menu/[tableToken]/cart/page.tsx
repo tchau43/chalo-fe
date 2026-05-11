@@ -35,7 +35,7 @@ export default function CartPage() {
       tableToken: tableToken,
     });
     clearCart();
-    router.push(`/menu/${tableToken}/order/${order.id}`);
+    router.push(`/menu/${tableToken}/orders/${order.id}`);
   };
 
   if (items.length === 0) {
@@ -105,7 +105,7 @@ export default function CartPage() {
           {items.map((item) => (
             <div
               key={item.productId}
-              className="flex gap-3 rounded-2xl bg-white dark:bg-gray-900 p-3 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors"
+              className="relative flex gap-3 rounded-2xl bg-white dark:bg-gray-900 p-3 shadow-sm border border-gray-100 dark:border-gray-800 transition-colors"
             >
               {/* Product Image */}
               <div className="size-20 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-3xl shrink-0 overflow-hidden border border-gray-100 dark:border-gray-700">

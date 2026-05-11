@@ -1,8 +1,8 @@
+// src/app/(auth)/login/_components/LoginForm.tsx
 "use client";
 import { EyeIcon } from "@/components/shared/icons/EyeIcon";
 import { EyeOffIcon } from "@/components/shared/icons/EyeOffIcon";
 import { SpinnerIcon } from "@/components/shared/icons/SpinnerIcon";
-// src/app/(auth)/login/_components/LoginForm.tsx
 
 import { useLogin } from "@/hooks/useLogin";
 import { useState } from "react";

@@ -1,5 +1,4 @@
 // src/app/test/page.tsx
-import { getMenuCategories } from "@/services/menu/menu.server";
 import { API } from "@/constants";
 import { INTERNAL_API } from "@/constants/server";
 
@@ -18,8 +17,6 @@ export default async function TestServerPage() {
       next: { revalidate: 0 }, // Để 0 để không bị cache, luôn gọi mới khi F5
     });
 
-    console.log(">>>>>>>>>>>>>>>res", res);
-
     // 3. Gom thông tin của Response để in ra màn hình
     // rawResponseInfo = `Status: ${res.status} | Ok: ${res.ok} | URL: ${res.url}`;
     // console.log("🔥 Thông tin Response:", rawResponseInfo);
@@ -27,8 +24,6 @@ export default async function TestServerPage() {
     // 4. Lấy dữ liệu
     if (res.ok) {
       const json = await res.json();
-      console.log(">>>>>>>>>>>>>>>json", json);
-
       data = json;
     }
   } catch (error: any) {

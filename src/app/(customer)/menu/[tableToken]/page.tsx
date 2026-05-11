@@ -38,11 +38,13 @@ export default async function CustomerMenuPage({
 
   const table = await getTableByTokenServer(tableToken);
   if (!table) notFound();
+
   const [categories, products] = await Promise.all([
     getMenuCategoriesServer(),
     getMenuProductsServer(),
   ]);
 
+  const isOccupied = table.status === "OCCUPIED";
 
   // 2. MOCK DỮ LIỆU CỨNG ĐỂ TEST GIAO DIỆN ======================
   // TODO: Move to real data
@@ -120,6 +122,7 @@ export default async function CustomerMenuPage({
       categories={categories}
       initProducts={products}
       tableName={table.name}
+      isOccupied={isOccupied}
     />
   );
 }

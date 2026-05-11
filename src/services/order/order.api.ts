@@ -37,7 +37,7 @@ export const updateOrderStatus = (
   orderId: string,
   status: OrderStatus,
 ): Promise<OrderDto> =>
-  request.put(API.ORDER.UPDATE_STATUS, { orderId, status });
+  request.put(API.ORDER.UPDATE_STATUS, { id: orderId, status });
 
 export const requestPayment = (orderId: string): Promise<void> =>
   request.post(API.ORDER.REQUEST_PAYMENT, { orderId });
