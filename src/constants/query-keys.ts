@@ -23,7 +23,8 @@ export const QUERY_KEYS = {
     ALL: ["orders"] as const,
     PAGE: (params: object) => ["orders", "page", params] as const,
     DETAIL: (id: string) => ["orders", id] as const,
-    BY_TABLE: (tableId: number) => ["orders", "table", tableId] as const,
+    BY_TABLE_TOKEN: (token: string) => ["orders", "table", token] as const,
+    ESTIMATED_WAIT: (orderId?: string) => ["orders", "estimated-wait", orderId ?? "queue"] as const,
   },
   LOOKUP: {
     CATEGORIES: ["lookup", "categories"] as const,

@@ -1,0 +1,49 @@
+// src/services/order/order.api.ts
+
+import { request } from "@/lib/api-client";
+import {
+  CreateOrderPayload,
+  OrderDto,
+  OrderPageParams,
+  OrderStatus,
+  PayAllOrdersPayload,
+  PayOrderPayload,
+} from "./order.types";
+import { API } from "@/constants";
+import { PageResult } from "../types";
+
+export const getOrderPage = (
+  params: OrderPageParams,
+): Promise<PageResult<OrderDto>> => request.get(API.ORDER.PAGE, { params });
+
+export const getOrderById = (id: string): Promise<OrderDto> =>
+  request.get(API.ORDER.DETAIL, { params: { id } });
+
+export const getOrdersByTableToken = (
+  tableToken: string,
+): Promise<OrderDto[]> => request.get(`${API.ORDER.BY_TOKEN}/${tableToken}`);
+
+export const getEstimatedWait = (
+  orderId?: string,
+): Promise<{ estimatedMinutes: number }> =>
+  request.get(API.ORDER.ESTIMATED_WAIT, {
+    params: orderId ? { orderId } : undefined,
+  });
+
+export const createOrder = (data: CreateOrderPayload): Promise<OrderDto> =>
+  request.post(API.ORDER.CREATE, data);
+
+export const updateOrderStatus = (
+  orderId: string,
+  status: OrderStatus,
+): Promise<OrderDto> =>
+  request.put(API.ORDER.UPDATE_STATUS, { orderId, status });
+
+export const requestPayment = (orderId: string): Promise<void> =>
+  request.post(API.ORDER.REQUEST_PAYMENT, { orderId });
+
+export const payOrder = (data: PayOrderPayload): Promise<OrderDto> =>
+  request.post(API.ORDER.PAY, data);
+
+export const payAllOrders = (data: PayAllOrdersPayload): Promise<OrderDto[]> =>
+  request.post(API.ORDER.PAY_ALL, data);

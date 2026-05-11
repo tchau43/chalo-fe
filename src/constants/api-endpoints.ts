@@ -3,21 +3,27 @@
 export const API = {
   AUTH: {
     LOGIN: "/auth/login",
-    REGISTER: "/auth/register",
+    REFRESH: "/auth/refresh-token",
     LOGOUT: "/auth/logout",
     ME: "/auth/me",
-    REFRESH: "/auth/refresh-token",
+  },
+  USER: {
+    PAGE: "/user/page",
+    CREATE: "/user/create",
+    UPDATE: "/user/update",
+    CHANGE_PASSWORD: "/user/change-password",
+    DELETE: "/user/delete",
   },
   CATEGORY: {
     LIST: "/menu/category/list",
+    SIMPLE_LIST: "/menu/category/simple-list",
     DETAIL: "/menu/category/detail",
     CREATE: "/menu/category/create",
     UPDATE: "/menu/category/update",
     DELETE: "/menu/category/delete",
-    SIMPLE_LIST: "/menu/category/simple-list",
   },
   PRODUCT: {
-    LIST: 'menu/product/list',
+    LIST: "/menu/product/list",
     PAGE: "/menu/product/page",
     DETAIL: "/menu/product/detail",
     SIMPLE_LIST: "/menu/product/simple-list",
@@ -35,5 +41,27 @@ export const API = {
     UPDATE: "/table/update",
     DELETE: "/table/delete",
     REGENERATE_QR: "/table/regenerate-qr",
+  },
+  ORDER: {
+    CREATE: "/order/create",
+    PAGE: "/order/page",
+    DETAIL: "/order/detail",
+    BY_TOKEN: "/order/by-token",
+    ESTIMATED_WAIT: "/order/estimated-wait",
+    UPDATE_STATUS: "/order/status",
+    REQUEST_PAYMENT: "/order/request-payment",
+    PAY: "/order/pay",
+    PAY_ALL: "/order/pay-all",
+    STATS_REVENUE: "/order/stats/revenue",
+    STATS_TOP_PRODUCTS: "/order/stats/top-products",
+  },
+  UPLOAD: {
+    IMAGE: "/upload/image",
+  },
+  SSE: {
+    ORDER_EVENTS: "/order/events",
+  },
+  HEALTH: {
+    CHECK: "/health",
   },
 } as const;
