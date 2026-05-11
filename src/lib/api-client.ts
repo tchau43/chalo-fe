@@ -98,7 +98,10 @@ apiClient.interceptors.response.use(
     const original = error.config!;
     const status = error.status;
 
-    if (status === 401 && !original._retry) {
+    const backendMessage = (error.response?.data as ApiResponse)?.message ?? "";
+    if (backendMessage) error.message = backendMessage;
+
+    if (status === 401 && !original._retry && !original.skipAuth) {
       original._retry = true;
 
       if (isRefreshing) {
@@ -140,6 +143,7 @@ apiClient.interceptors.response.use(
     handleApiError(
       error as AxiosError<{ message: string; code: number; data: unknown }>,
     );
+
     return Promise.reject(error);
   },
 );
