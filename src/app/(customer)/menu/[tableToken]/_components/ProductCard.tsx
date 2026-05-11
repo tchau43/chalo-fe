@@ -1,11 +1,14 @@
 // src/app/(customer)/menu/[tableToken]/_components/ProductCard.tsx
 import { ProductDto } from "@/services/menu";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: ProductDto;
+  onAddToCart: (quantity: number) => void;
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
+  const [quantity, setQuantity] = useState<number>(1);
   const isUnavailable = product.status !== "AVAILABLE" || !product.isActive;
   return (
     <div
@@ -48,9 +51,35 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             {product.price.toLocaleString("vi-VN")}đ
           </span>
           {!isUnavailable && (
-            <button className="flex size-7 items-center justify-center rounded-full bg-brand-400 text-white text-lg font-medium hover:bg-brand-500 active:bg-brand-600 transition-colors shadow-sm shadow-brand-400/40">
-              +
-            </button>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setQuantity((q) => q - 1)}
+                  disabled={quantity <= 1}
+                  className="flex size-6 items-center justify-center rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors text-sm disabled:opacity-30"
+                >
+                  -
+                </button>
+                <span className="text-sm font-semibold text-gray-900 w-4 text-center">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity((q) => q + 1)}
+                  className="flex size-6 items-center justify-center rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors text-sm"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                onClick={() => {
+                  onAddToCart(quantity);
+                  setQuantity(1);
+                }}
+                className="flex items-center gap-1 rounded-full bg-brand-400 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-500 active:bg-brand-600 transition-colors shadow-sm shadow-brand-400/40"
+              >
+                Thêm
+              </button>
+            </div>
           )}
         </div>
       </div>

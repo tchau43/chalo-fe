@@ -3,7 +3,8 @@
 import { CategoryDto, ProductDto } from "@/services/menu";
 import { useMemo, useState } from "react";
 import { ProductCard } from "./ProductCard";
-
+import { useParams, useRouter } from "next/navigation";
+import { useCartStore } from "@/stores/cart.store";
 interface CustomerMenuClientProps {
   tableName: string;
   categories: CategoryDto[];
@@ -15,8 +16,14 @@ export const CustomerMenuClient = ({
   initProducts,
   tableName,
 }: CustomerMenuClientProps) => {
+
+  const { tableToken } = useParams<{ tableToken: string }>();
+  const router = useRouter();
   const [activeCateId, setActiveCateId] = useState<string | null>(null);
   const [search, setSearch] = useState<string>("");
+
+  const itemCount = useCartStore((s) => s.getItemCount());
+  const addItem = useCartStore((s) => s.addItem);
 
   const filterProduct = useMemo(() => {
     let list = initProducts;
@@ -38,6 +45,18 @@ export const CustomerMenuClient = ({
       }))
       .filter((g) => g.products.length > 0);
   }, [search, activeCateId, initProducts, categories]);
+
+  const handleAddToCart = (product: ProductDto, quantity: number) => {
+    addItem(
+      {
+        productId: product.id,
+        price: product.price,
+        productImageUrl: product.imageUrl,
+        productName: product.name,
+      },
+      quantity,
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -101,6 +120,7 @@ export const CustomerMenuClient = ({
           ))}
         </div>
       </header>
+
       {/* menu content */}
       <main className="pb-32">
         {activeCateId || search ? (
@@ -111,7 +131,13 @@ export const CustomerMenuClient = ({
                 <p className="text-sm">Không tìm thấy món phù hợp</p>
               </div>
             ) : (
-              filterProduct.map((p) => <ProductCard product={p} key={p.id} />)
+              filterProduct.map((p) => (
+                <ProductCard
+                  product={p}
+                  key={p.id}
+                  onAddToCart={(quantity) => handleAddToCart(p, quantity)}
+                />
+              ))
             )}
           </div>
         ) : (
@@ -123,7 +149,11 @@ export const CustomerMenuClient = ({
                 </h2>
                 <div className="px-4 space-y-3">
                   {products.map((p) => (
-                    <ProductCard product={p} key={p.id} />
+                    <ProductCard
+                      product={p}
+                      key={p.id}
+                      onAddToCart={(quantity) => handleAddToCart(p, quantity)}
+                    />
                   ))}
                 </div>
               </section>
@@ -133,8 +163,20 @@ export const CustomerMenuClient = ({
       </main>
       {/* bottom */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-3 safe-area-pb">
-        <button className="w-full rounded-2xl bg-brand-400 py-3.5 text-sm font-semibold text-white hover:bg-brand-500 active:bg-brand-600 transition-colors shadow-sm shadow-brand-400/30">
-          Xem giỏ hàng (Phase 5)
+        <button
+          onClick={() => router.push(`/menu/${tableToken}/cart`)}
+          disabled={itemCount === 0}
+          className="w-full rounded-2xl bg-brand-400 py-3.5 text-sm font-semibold text-white hover:bg-brand-500 active:bg-brand-600 transition-colors shadow-sm shadow-brand-400/30"
+        >
+          {itemCount > 0 ? (
+            <>
+              <span className="flex size-5 items-center justify-center rounded-full bg-white text-brand-600 text-xs font-bold">
+                {itemCount}
+              </span>
+            </>
+          ) : (
+            "Chưa có món"
+          )}
         </button>
       </div>
     </div>
