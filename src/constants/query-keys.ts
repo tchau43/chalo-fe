@@ -1,3 +1,4 @@
+// src/constants/query-keys.ts
 export const QUERY_KEYS = {
   AUTH: {
     ME: ["auth", "me"] as const,
@@ -21,6 +22,7 @@ export const QUERY_KEYS = {
   },
   ORDERS: {
     ALL: ["orders"] as const,
+    ACTIVE: ["orders", "active"] as const,
     PAGE: (params: object) => ["orders", "page", params] as const,
     DETAIL: (id: string) => ["orders", id] as const,
     BY_TABLE_TOKEN: (token: string) => ["orders", "table", token] as const,

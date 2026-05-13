@@ -45,6 +45,7 @@ export const API = {
   ORDER: {
     CREATE: "/order/create",
     PAGE: "/order/page",
+    ACTIVE: "/order/active",
     DETAIL: "/order/detail",
     BY_TOKEN: "/order/by-token",
     ESTIMATED_WAIT: "/order/estimated-wait",

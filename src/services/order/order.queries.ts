@@ -4,21 +4,34 @@ import { QUERY_KEYS } from "@/constants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createOrder,
+  getActiveOrders,
   getEstimatedWait,
   getOrderById,
+  getOrderPage,
   getOrdersByTableToken,
   payAllOrders,
   payOrder,
   requestPayment,
+  updateOrderStatus,
 } from "./order.api";
 import {
   CreateOrderPayload,
+  OrderPageParams,
+  OrderStatus,
   PayAllOrdersPayload,
   PayOrderPayload,
 } from "./order.types";
 import { toast } from "sonner";
 
 // ─── Queries ──────────────────────────────────────────────────────────────────
+// ===ADMIN===
+export const useGetOrderPage = (params: OrderPageParams) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.ORDERS.PAGE(params),
+    queryFn: () => getOrderPage(params),
+    staleTime: 30_000,
+  });
+};
 
 export const useGetOrderByToken = (tableToken: string) => {
   return useQuery({
@@ -45,6 +58,14 @@ export const useGetEstimatedWait = (orderId?: string) => {
   });
 };
 
+// ===STAFF===
+export const useGetActiveOrder = () =>
+  useQuery({
+    queryKey: QUERY_KEYS.ORDERS.ACTIVE,
+    queryFn: () => getActiveOrders(),
+    staleTime: 10_000,
+  });
+
 // ─── Mutations ────────────────────────────────────────────────────────────────
 
 export const useCreateOrder = () => {
@@ -58,6 +79,8 @@ export const useCreateOrder = () => {
         queryKey: QUERY_KEYS.ORDERS.BY_TABLE_TOKEN(variables.tableToken),
       });
       qc.invalidateQueries({ queryKey: QUERY_KEYS.ORDERS.ESTIMATED_WAIT() });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.ORDERS.ACTIVE });
+
       qc.invalidateQueries({
         queryKey: QUERY_KEYS.ORDERS.ESTIMATED_WAIT(createdOrder.id),
       });
@@ -66,19 +89,42 @@ export const useCreateOrder = () => {
   });
 };
 
-export const useRequestPayment = () => {
+export const useUpdateOrderStatus = () => {
+  const qc = useQueryClient();
   return useMutation({
-    mutationFn: (orderId: string) => requestPayment(orderId),
-    onSuccess: () => toast.success("Đã gửi yêu cầu thanh toán đến quầy"),
+    mutationFn: ({
+      orderId,
+      status,
+    }: {
+      orderId: string;
+      status: OrderStatus;
+    }) => updateOrderStatus(orderId, status),
+    onSuccess: (updatedOrder) => {
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.ORDERS.ACTIVE });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.ORDERS.ALL });
+      qc.invalidateQueries({
+        queryKey: QUERY_KEYS.ORDERS.DETAIL(updatedOrder.id),
+      });
+      toast.success("Cập nhật trạng thái đơn hàng thành công");
+    },
     onError: (e: Error) => toast.error(e.message),
   });
 };
+
+// export const useRequestPayment = () => {
+//   return useMutation({
+//     mutationFn: (orderId: string) => requestPayment(orderId),
+//     onSuccess: () => toast.success("Đã gửi yêu cầu thanh toán đến quầy"),
+//     onError: (e: Error) => toast.error(e.message),
+//   });
+// };
 
 export const usePayOrder = (tableToken: string) => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: PayOrderPayload) => payOrder(data),
     onSuccess: () => {
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.ORDERS.ACTIVE });
       qc.invalidateQueries({
         queryKey: QUERY_KEYS.ORDERS.BY_TABLE_TOKEN(tableToken),
       });
@@ -96,6 +142,7 @@ export const usePayAllOrders = (tableToken: string) => {
       qc.invalidateQueries({
         queryKey: QUERY_KEYS.ORDERS.BY_TABLE_TOKEN(tableToken),
       });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.ORDERS.ACTIVE });
       toast.success("Đã thanh toán tất cả đơn hàng!");
     },
     onError: (e: Error) => toast.error(e.message),

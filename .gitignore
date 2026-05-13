@@ -43,3 +43,8 @@ next-env.d.ts
 # local dump files
 *_DUMP.md
 SRC_TREE.md
+summary.md
+
+chalo-description.md
+
+chalo-route.md

@@ -7,8 +7,11 @@ export const MSWProvider = ({ children }: { children: ReactNode }) => {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    // Chỉ chạy MSW trong development
-    if (process.env.NODE_ENV === "development") {
+    const isDev = process.env.NODE_ENV === "development";
+    const enableMSW = process.env.NEXT_PUBLIC_ENABLE_MSW === "true";
+
+    // Chỉ bật MSW khi dev + có cờ env rõ ràng
+    if (isDev && enableMSW) {
       import("./browser")
         .then(({ worker }) =>
           worker.start({

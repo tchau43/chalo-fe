@@ -1,0 +1,18 @@
+{
+  "Section Divider Comment": {
+    "scope": "javascript,typescript,javascriptreact,typescriptreact",
+    "prefix": "seccmt",
+    "body": [
+      "// ─── ${1:Section Name} ────────────────────────────────────────────────────────$0",
+    ],
+    "description": "Create a section divider comment using ─ characters",
+  },
+  "Custom Console Log": {
+    "scope": "javascript,typescript,javascriptreact,typescriptreact",
+    "prefix": "mylog",
+    "body": [
+      "console.log(\">>>>>>>>>>>>>>>>>>>> ${1:variable}\", ${1:variable});$0",
+    ],
+    "description": "Log a variable to the console with a distinct marker",
+  },
+}

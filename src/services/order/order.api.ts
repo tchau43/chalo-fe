@@ -1,5 +1,4 @@
 // src/services/order/order.api.ts
-
 import { request } from "@/lib/api-client";
 import {
   CreateOrderPayload,
@@ -22,6 +21,9 @@ export const getOrderById = (id: string): Promise<OrderDto> =>
 export const getOrdersByTableToken = (
   tableToken: string,
 ): Promise<OrderDto[]> => request.get(`${API.ORDER.BY_TOKEN}/${tableToken}`);
+
+export const getActiveOrders = (): Promise<OrderDto[]> =>
+  request.get(`${API.ORDER.ACTIVE}`);
 
 export const getEstimatedWait = (
   orderId?: string,
